@@ -97,7 +97,31 @@ async function run() {
     })
 
 
-    
+    app.get('/orders', verifyJWT, async (req, res) => {
+      const email = req.query.email;
+
+      const decodedEmail = req.decoded.email
+      if (email === decodedEmail) {
+        const query = { email: email };
+        const orders = await orderCollection.find(query).toArray();
+        return res.send(orders);
+      } else {
+        return res.status(403).send({ message: 'forbidden access' });
+      }
+
+    })
+
+
+    app.post('/orders', async (req, res) => {
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
+    });
+    app.get('/user', verifyJWT, async (req, res) => {
+      const users = await userCollection.find().toArray();
+      res.send(users);
+    })
+
   }
   finally {
 
