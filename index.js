@@ -46,6 +46,7 @@ async function run() {
     const orderCollection = client.db('computer_ingredient').collection('order');
     const userCollection = client.db('computer_ingredient').collection('user');
     const paymentCollection = client.db('computer_ingredient').collection('payment')
+    const reviewCollection = client.db('computer_ingredient').collection('review')
 
 
     const verifyAdmin = async (req, res, next) => {
@@ -218,6 +219,13 @@ async function run() {
       const result = await productCollection.insertOne(order);
       res.send(result);
     });
+    app.post('/reviews', async (req, res) => {
+      const order = req.body;
+      const result = await reviewCollection.insertOne(order);
+      res.send(result);
+    });
+
+
     app.get('/user', verifyJWT, async (req, res) => {
       const users = await userCollection.find().toArray();
       res.send(users);
