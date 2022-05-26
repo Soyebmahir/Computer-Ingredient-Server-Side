@@ -226,9 +226,14 @@ async function run() {
     });
 
 
+
     app.get('/user', verifyJWT, async (req, res) => {
       const users = await userCollection.find().toArray();
       res.send(users);
+    })
+    app.get('/reviews',  async (req, res) => {
+      const reviews = await reviewCollection.find().toArray();
+      res.send(reviews);
     })
 
   }
