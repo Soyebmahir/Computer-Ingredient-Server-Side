@@ -122,6 +122,32 @@ async function run() {
       res.send({ result, token });
     })
 
+    app.delete('/orders/:id',  async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await orderCollection.deleteOne(query);
+      res.send(result);
+    })
+
+
+
+
+
+
+    app.put('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+
+      console.log(id);
+      const query = { _id: ObjectId(id) };
+      const options = { upsert: true }
+      const updateDoc = {
+        $set: { status: true },
+      }
+      const result = await orderCollection.updateOne(query, updateDoc, options)
+
+      res.send(result);
+    })
+
 
     app.get('/orders', verifyJWT, async (req, res) => {
       const email = req.query.email;
@@ -161,7 +187,8 @@ async function run() {
     })
 
     //all orders
-    app.get('/orders', async (req, res) => {
+
+    app.get('/order', verifyJWT, async (req, res) => {
       const query = {};
       const orders = await orderCollection.find(query).toArray();
       res.send(orders);
@@ -184,6 +211,11 @@ async function run() {
     app.post('/orders', async (req, res) => {
       const order = req.body;
       const result = await orderCollection.insertOne(order);
+      res.send(result);
+    });
+    app.post('/products', async (req, res) => {
+      const order = req.body;
+      const result = await productCollection.insertOne(order);
       res.send(result);
     });
     app.get('/user', verifyJWT, async (req, res) => {
